@@ -73,11 +73,15 @@ defmodule TwitterBot.TwitterServer do
       if Enum.count(timeline) >= 20 do
         hashtags = TwitterBot.Tweets.extractHashtags(timeline)
         top_hashtags = TwitterBot.Utils.frequencies_without_counts(hashtags, 5)
-        top_string = Enum.join(top_hashtags, " ")
-        GenServer.cast(:DatabaseServer, {:insertHashtags, name, top_string})
-        msg = "Top hashtags for @#{name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
-        ##IO.puts msg
-        ExTwitter.update(msg)
+        if Enum.count(top_hashtags) >= 1 do
+          top_string = Enum.join(top_hashtags, " ")
+          GenServer.cast(:DatabaseServer, {:insertHashtags, name, top_string})
+          msg = "Top hashtags for @#{name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+          ##IO.puts msg
+          ExTwitter.update(msg)
+        else
+          Logger.info "Too few hashtags for User #{name}: skipping hashtags
+        end
       else
         Logger.info "Too few records for User #{name}: skipping hashtags"
       end
