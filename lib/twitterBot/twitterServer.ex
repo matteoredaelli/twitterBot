@@ -80,7 +80,7 @@ defmodule TwitterBot.TwitterServer do
           ##IO.puts msg
           ExTwitter.update(msg)
         else
-          Logger.info "Too few hashtags for User #{name}: skipping hashtags
+          Logger.info "Too few hashtags for User #{name}: skipping hashtags"
         end
       else
         Logger.info "Too few records for User #{name}: skipping hashtags"
