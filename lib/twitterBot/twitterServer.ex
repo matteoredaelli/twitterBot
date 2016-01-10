@@ -79,12 +79,11 @@ defmodule TwitterBot.TwitterServer do
         ##IO.puts msg
         ExTwitter.update(msg)
       else
-        Logger.info "Too vew records for User #{name}: skipping hashtags"
+        Logger.info "Too few records for User #{name}: skipping hashtags"
       end
     else
       Logger.info "User #{name} already in the database"
     end
-    IO.puts msg
     {:noreply, requests + 1}
   end
   
