@@ -24,8 +24,8 @@ defmodule TwitterBot do
 
     children = [
       # Define workers and child supervisors to be supervised
-      worker(TwitterBot.TwitterServer, [:ok, [name: :TwitterServer]]),
-      worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]])
+      worker(TwitterBot.TwitterServer, [:ok, [name: :TwitterServer]], restart: :permanent),
+      worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]], restart: :permanent)
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
