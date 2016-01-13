@@ -1,6 +1,6 @@
 # TwitterBot
 
-**A simple Twitter Bot written in Elixir
+A simple Twitter Bot written in Elixir
 
 ## License
 TwitterBot is free software under le license GNU v3+
@@ -24,9 +24,23 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## setup
 
-  iex -S mix install
+  1. Set the environment variables:
+  
+    TWITTER_STREAM_WORD
+    TWITTER_CONSUMER_KEY
+    TWITTER_CONSUMER_SECRET
+    TWITTER_ACCESS_TOKEN
+    TWITTER_ACCESS_SECRET
+  
+  2. create the database and tables with
+
+    iex -S mix install
 
 ## run
 
+ (old releases) 
   mix run -e 'TwitterBot.main "opensource"'
   elixir --detached -S mix run -e 'TwitterBot.main "opensource"'
+
+  (latest releases)
+  mix run --no-halt

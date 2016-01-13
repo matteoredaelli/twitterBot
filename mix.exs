@@ -19,7 +19,7 @@ defmodule TwitterBot.Mixfile do
 
   def project do
     [app: :twitterBot,
-     version: "0.0.3",
+     version: "0.1.0",
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -32,7 +32,7 @@ defmodule TwitterBot.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [applications: [:logger],
-     mod: {TwitterBot, []}]
+     mod: {TwitterBot, [System.get_env("TWITTER_STREAM_WORD")]}]
   end
 
   # Dependencies can be Hex packages:
