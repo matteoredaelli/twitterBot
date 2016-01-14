@@ -78,7 +78,7 @@ defmodule TwitterBot.TwitterServer do
           GenServer.cast(:DatabaseServer, {:insertHashtags, name, top_string})
           msg = "Top hashtags for @#{name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
           Logger.info IO.puts msg
-          #ExTwitter.update(msg)
+          ExTwitter.update(msg)
         else
           Logger.info "Too few hashtags for User #{name}: skipping hashtags"
         end
