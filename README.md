@@ -26,7 +26,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   1. Set the environment variables:
   
-    TWITTER_STREAM_WORD
+    TWITTER_STREAM_WORDS  ex. "opensource,linux,iot"
     TWITTER_CONSUMER_KEY
     TWITTER_CONSUMER_SECRET
     TWITTER_ACCESS_TOKEN
@@ -44,3 +44,4 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   (latest releases)
   mix run --no-halt
+

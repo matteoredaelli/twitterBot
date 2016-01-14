@@ -77,8 +77,8 @@ defmodule TwitterBot.TwitterServer do
           top_string = Enum.join(top_hashtags, " ")
           GenServer.cast(:DatabaseServer, {:insertHashtags, name, top_string})
           msg = "Top hashtags for @#{name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
-          ##IO.puts msg
-          ExTwitter.update(msg)
+          Logger.info IO.puts msg
+          #ExTwitter.update(msg)
         else
           Logger.info "Too few hashtags for User #{name}: skipping hashtags"
         end

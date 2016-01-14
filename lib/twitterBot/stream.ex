@@ -15,9 +15,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 defmodule TwitterBot.TwitterStream do
+  require Logger
+  
   def stream(word) do
     # a tweet about starting ebottwitter
-    msg = "@ebot70: starting #twitterBot for word ##{word} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+    timestamp = :os.system_time(:seconds)
+    msg = "@ebot70: starting #twitterBot for word ##{word} at #{timestamp} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+    Logger.info msg
+    
     ExTwitter.update(msg)
 
     stream = ExTwitter.stream_filter(track: word)

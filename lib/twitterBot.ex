@@ -19,15 +19,17 @@ defmodule TwitterBot do
   
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
-  def start(_type, [word]) do
+  def start(_type, [words_string]) do
     import Supervisor.Spec, warn: false
-
+    words = String.split(words_string, ",")
+    tasks_children = Enum.map(words,
+      fn(w) -> worker(Task, [fn -> TwitterBot.TwitterStream.stream(w) end],
+[restart: :permanent, id: w]) end)
     children = [
       # Define workers and child supervisors to be supervised
       worker(TwitterBot.TwitterServer, [:ok, [name: :TwitterServer]], restart: :permanent),
-      worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]], restart: :permanent),
-      worker(Task, [fn -> TwitterBot.TwitterStream.stream(word) end], restart: :permanent)
-    ]
+      worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]], restart: :permanent)
+    ] ++ tasks_children
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
