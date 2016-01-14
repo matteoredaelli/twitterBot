@@ -17,7 +17,7 @@
 defmodule TwitterBot.TwitterStream do
   def stream(word) do
     # a tweet about starting ebottwitter
-    msg = "@ebot70: starting #EbotTwitter for word ##{word} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+    msg = "@ebot70: starting #twitterBot for word ##{word} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
     ExTwitter.update(msg)
 
     stream = ExTwitter.stream_filter(track: word)
