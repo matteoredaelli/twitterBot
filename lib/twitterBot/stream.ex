@@ -23,7 +23,7 @@ defmodule TwitterBot.TwitterStream do
     msg = "@ebot70: starting #twitterBot for word ##{word} at #{timestamp} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
     Logger.info msg
     
-    ExTwitter.update(msg)
+    #ExTwitter.update(msg)
 
     stream = ExTwitter.stream_filter(track: word)
     stream

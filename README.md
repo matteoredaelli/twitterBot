@@ -44,4 +44,5 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   (latest releases)
   mix run --no-halt
+  elixir --detached -S mix run --no-halt
 
