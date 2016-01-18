@@ -29,5 +29,12 @@ defmodule TwitterBot.Tweet do
   def extractUserMentions(tweet) do
     Enum.map(tweet.entities.user_mentions, fn(x) -> x.screen_name end)
   end
-                       
+
+  @spec extractUrls(ExTwitter.Model.Tweet.t) :: [ String.t ]
+  def extractUrls(tweet) do
+    tweet
+    |> Map.get(:entities)
+    |> Map.get(:urls)
+    |> Enum.map(&Map.get(&1, :expanded_url))
+  end                  
 end

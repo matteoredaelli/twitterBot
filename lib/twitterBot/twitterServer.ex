@@ -70,10 +70,10 @@ defmodule TwitterBot.TwitterServer do
     if is_nil(hashtag_record) do
       Logger.info "User #{name} NOT in the database: getting timeline"
       timeline = ExTwitter.user_timeline(screen_name: name, count: 500)
-      if Enum.count(timeline) >= 50 do
+      if Enum.count(timeline) >= Application.get_env(:twitterBot, :extractHashtagsIfTweetsCountMoreThen) do
         hashtags = TwitterBot.Tweets.extractHashtags(timeline)
         top_hashtags = TwitterBot.Utils.frequencies_without_counts(hashtags, 5)
-        if Enum.count(top_hashtags) >= 2 do
+        if Enum.count(top_hashtags) > Application.get_env(:twitterBot, :showHashtagsIfMoreThen) do
           top_string = Enum.join(top_hashtags, " ")
           GenServer.cast(:DatabaseServer, {:insertHashtags, name, top_string})
           msg = "Top hashtags for @#{name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"

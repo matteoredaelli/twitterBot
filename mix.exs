@@ -31,8 +31,8 @@ defmodule TwitterBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger],
-     mod: {TwitterBot, [System.get_env("TWITTER_STREAM_WORDS")]}]
+    [applications: [:logger, :httpotion],
+     mod: {TwitterBot, [Application.get_env(:twitterBot, :wordsToStream)]}]
   end
  
   # Dependencies can be Hex packages:
@@ -48,7 +48,9 @@ defmodule TwitterBot.Mixfile do
     [
       {:oauth, github: "tim/erlang-oauth"},
       {:extwitter, "~> 0.6"},
-      {:amnesia, github: "meh/amnesia"}
+      {:amnesia, github: "meh/amnesia"},
+      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2"},
+      {:httpotion, "~> 2.1.0"}
     ]
   end
 

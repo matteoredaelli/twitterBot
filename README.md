@@ -26,13 +26,14 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
   1. Set the environment variables:
   
-    TWITTER_STREAM_WORDS  ex. "opensource,linux,iot"
     TWITTER_CONSUMER_KEY
     TWITTER_CONSUMER_SECRET
     TWITTER_ACCESS_TOKEN
     TWITTER_ACCESS_SECRET
+
+  2. Edit config file config/config.exs
   
-  2. create the database and tables with
+  3. create the database and tables with
 
     iex -S mix install
 

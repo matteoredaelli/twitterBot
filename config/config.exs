@@ -34,3 +34,9 @@ config :extwitter, :oauth, [
    access_token: System.get_env("TWITTER_ACCESS_TOKEN"),
    access_token_secret: System.get_env("TWITTER_ACCESS_SECRET")
 ]
+
+config :twitterBot,
+wordsToStream: "opensource,linux,apple",
+showHashtagsIfMoreThen: 3,
+extractHashtagsIfTweetsCountMoreThen: 75
+
