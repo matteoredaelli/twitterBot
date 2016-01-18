@@ -48,9 +48,7 @@ defmodule TwitterBot.Mixfile do
     [
       {:oauth, github: "tim/erlang-oauth"},
       {:extwitter, "~> 0.6"},
-      {:amnesia, github: "meh/amnesia"},
-      {:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2"},
-      {:httpotion, "~> 2.1.0"}
+      {:amnesia, github: "meh/amnesia"}
     ]
   end
 
