@@ -31,7 +31,7 @@ defmodule TwitterBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpotion],
+    [applications: [:logger],
      mod: {TwitterBot, [Application.get_env(:twitterBot, :wordsToStream)]}]
   end
  

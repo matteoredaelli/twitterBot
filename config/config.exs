@@ -36,7 +36,7 @@ config :extwitter, :oauth, [
 ]
 
 config :twitterBot,
-wordsToStream: "opensource,linux,apple",
+wordsToStream: "bigdata,iot",
 showHashtagsIfMoreThen: 3,
 extractHashtagsIfTweetsCountMoreThen: 75
 
