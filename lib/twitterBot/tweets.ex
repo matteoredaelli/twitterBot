@@ -27,7 +27,16 @@ defmodule TwitterBot.Tweets do
       Enum.map(fn(x) -> List.flatten(x) end)
     List.flatten(pipe)
   end
-    
+  
+  def extractUrls(tweets) do
+    pipe = tweets |>
+      Enum.map(fn(x) -> x.entities.urls end) |>
+      Enum.filter(fn(x) -> Enum.count(x) > 0 end)  |>
+      Enum.map(fn(x) -> Enum.map(x, fn(z) -> z.expanded_url end) end) |>
+      Enum.map(fn(x) -> List.flatten(x) end)
+    List.flatten(pipe)
+  end
+  
   @doc """
   Extract User mentions
   """

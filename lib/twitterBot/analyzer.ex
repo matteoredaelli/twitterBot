@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-defmodule TwitterBot.TwitterServer do
+defmodule TwitterBot.Analyzer do
   use GenServer
   require Logger
   
@@ -33,26 +33,14 @@ defmodule TwitterBot.TwitterServer do
   def stop(server) do
     GenServer.call(server, :stop)
   end
-  
-  def keys(server) do
-    GenServer.call(server, {:keys})
-  end
     
   @doc """
   Looks up the bucket pid for `name` stored in `server`.
 
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def processUser(server, name) do
-    GenServer.cast(server, {:getTimeline, name})
-  end
-
-  def showHashtags(server, name) do
-    GenServer.call(server, {:showHashtags, name})
-  end
-  
-  def updateStatus(server, text) do
-    GenServer.cast(server, {:updateStatus, text})
+  def processTimeline(server, timeline, user) do
+    GenServer.cast(server, {:processTimeline, timeline, user})
   end
   
   ## Server Callbacks
@@ -65,15 +53,26 @@ defmodule TwitterBot.TwitterServer do
     {:stop, :normal, :ok, state}
   end
   
-  def handle_cast({:processUser, name}, requests) do
-    hashtag_record = GenServer.call(:DatabaseServer, {:getHashtags, name})
-    if is_nil(hashtag_record) do
-      Logger.info "User #{name} NOT in the database: getting timeline"
-      timeline = ExTwitter.user_timeline(screen_name: name, count: 500)
-      GenServer.cast(:Analyzer, {:processTimeline, timeline, name})
-      :timer.sleep(4000)
+  def handle_cast({:processTimeline, timeline, user}, requests) do
+    if Enum.count(timeline) >= Application.get_env(:twitterBot, :extractHashtagsIfTweetsCountMoreThen) do
+      hashtags = TwitterBot.Tweets.extractHashtags(timeline)
+      top_hashtags = TwitterBot.Utils.frequencies_without_counts(hashtags, 5)
+      top_string = Enum.join(top_hashtags, " ")
+      GenServer.cast(:DatabaseServer, {:insertHashtags, user, top_string})
+      if Enum.count(top_hashtags) > Application.get_env(:twitterBot, :showHashtagsIfMoreThen) do
+        msg = "Top hashtags for @#{user}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+        Logger.info msg
+        try do
+          ExTwitter.update(msg)
+        catch
+          _error -> 
+            ExTwitter.new_direct_message(user, msg)
+        end
+      else
+        Logger.info "Too few hashtags for User #{user}: skipping hashtags"
+      end
     else
-      Logger.info "User #{name} already in the database"
+        Logger.info "Too few records for User #{user}: skipping hashtags"
     end
     {:noreply, requests + 1}
   end
