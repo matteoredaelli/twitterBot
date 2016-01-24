@@ -37,6 +37,10 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
     iex -S mix install
 
+    or
+
+    mix amnesia.create -db Database --disk
+
 ## run
 
  (old releases) 

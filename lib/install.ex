@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Install do
   use Mix.Task
   use Database
-   
+  
   def run(_) do
     Amnesia.Schema.create
 

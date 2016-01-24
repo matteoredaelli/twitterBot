@@ -66,9 +66,9 @@ defmodule TwitterBot.Analyzer do
     GenServer.cast(:DatabaseServer, {:addUserUrls, user.id, top_urls})
   
     top_string = Enum.join(top_hashtags, " ")
+    msg = "Top hashtags for @#{user.screen_name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+    Logger.info msg
     if Enum.count(top_hashtags) > Application.get_env(:twitterBot, :showHashtagsIfMoreThen) and Application.get_env(:twitterBot, :updateStatus) do
-      msg = "Top hashtags for @#{user.screen_name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
-      Logger.info msg
       try do
         ExTwitter.update(msg)
       catch
@@ -76,7 +76,7 @@ defmodule TwitterBot.Analyzer do
           ExTwitter.new_direct_message(user, msg)
       end
     else
-      Logger.info "Too few hashtags for User @#{user.screen_name} #{user.id}: skipping hashtags"
+      Logger.info ":updateStatus=false OR Too few hashtags for User @#{user.screen_name} #{user.id}: skipping hashtags"
     end
 
     {:noreply, requests + 1}

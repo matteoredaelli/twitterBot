@@ -17,6 +17,7 @@
 defmodule TwitterBot.DatabaseServer do
   use GenServer
   use Database
+  require Logger
   
  ## Client API
   
@@ -53,6 +54,7 @@ defmodule TwitterBot.DatabaseServer do
   def getUser(server, id) do
     GenServer.call(server, {:getUser, id})
   end
+  
   ## Server Callbacks
   
   def init(:ok) do

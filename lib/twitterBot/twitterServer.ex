@@ -65,13 +65,20 @@ defmodule TwitterBot.TwitterServer do
     ## sample id=2243653404
     ## timeline = ExTwitter.user_timeline(screen_name: "ebot70")
     ## user=List.first(timeline).user
+    Logger.info "Processing user #{user.screen_name} (#{user.id}) ..."
+    
     if is_nil(GenServer.call(:DatabaseServer, {:getUser, user.id})) do
-      Logger.info "User #{user.id} NOT in the database: getting timeline"
+      Logger.info "  User #{user.screen_name} (#{user.id}) NOT in the database: getting timeline"
       timeline = ExTwitter.user_timeline(id: user.id, count: 500)
       GenServer.cast(:Analyzer, {:processTimeline, timeline, user})
       :timer.sleep(4000)
+      if is_nil(GenServer.call(:DatabaseServer, {:getUser, user.id})) do
+        Logger.debug "  User #{user.screen_name} (#{user.id}) should be already in the database"
+      else
+        Logger.debug "  User #{user.screen_name} (#{user.id}) correctly saved in the database"
+      end
     else
-      Logger.info "User #{user.id} already in the database"
+      Logger.info "  User #{user.screen_name} #{user.id} already in the database"
     end
     {:noreply, requests + 1}
   end

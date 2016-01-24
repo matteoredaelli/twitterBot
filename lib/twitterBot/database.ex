@@ -24,7 +24,7 @@ defdatabase Database do
 
   deftable UserUrl, [:user_id, :url], type: :bag do
     # this isn't required, but it's always nice to spec things
-    @type t :: %UserUrl{user_id: integer, url: String.t}
+    @type t :: %UserUrl{user_id: String.t, url: String.t}
 
     # this defines a helper function to fetch the user from a Message record
     def user(self) do
@@ -39,7 +39,7 @@ defdatabase Database do
   
   deftable UserHashtag, [:user_id, :hashtag], type: :bag do
     # this isn't required, but it's always nice to spec things
-    @type t :: %UserHashtag{user_id: integer, hashtag: String.t}
+    @type t :: %UserHashtag{user_id: String.t, hashtag: String.t}
 
     # this defines a helper function to fetch the user from a Message record
     def user(self) do
@@ -54,7 +54,7 @@ defdatabase Database do
   
   deftable UserMention, [:user_id, :mention], type: :bag do
     # this isn't required, but it's always nice to spec things
-    @type t :: %UserMention{user_id: integer, mention: String.t}
+    @type t :: %UserMention{user_id: String.t, mention: String.t}
 
     # this defines a helper function to fetch the user from a Message record
     def user(self) do
@@ -69,7 +69,7 @@ defdatabase Database do
     
   deftable User, [:id, :user], type: :ordered_set do
     # again not needed, but nice to have
-    @type t :: %User{id: integer, user: String.t}
+    @type t :: %User{id: String.t, user: String.t}
 
     ## hashtags
 
@@ -139,10 +139,4 @@ defdatabase Database do
     
   end
   
-  deftable Hashtags, [:name, :top_hashtags], type: :ordered_set  do
-    ## again not needed, but nice to have
-    @type t :: %Hashtags{name: String.t,
-                         top_hashtags: String.t}
-    
-  end
 end
