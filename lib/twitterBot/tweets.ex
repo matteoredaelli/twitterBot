@@ -36,12 +36,12 @@ defmodule TwitterBot.Tweets do
       Enum.map(fn(x) -> List.flatten(x) end)
     List.flatten(pipe)
   end
-  
-  @doc """
-  Extract User mentions
-  """
-  def extractUserMentions(tweet) do
-    Enum.map(tweet.entities.user_mentions, fn(x) -> x.screen_name end)
-  end
-                       
+
+  def extractMentions(tweets) do
+    pipe = tweets |>
+      Enum.map(fn(x) -> TwitterBot.Tweet.extractUserMentions(x) end) |>
+      Enum.filter(fn(x) -> Enum.count(x) > 0 end)  |>
+      Enum.map(fn(x) -> List.flatten(x) end) 
+    List.flatten(pipe)
+  end                      
 end

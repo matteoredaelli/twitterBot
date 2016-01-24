@@ -54,26 +54,31 @@ defmodule TwitterBot.Analyzer do
   end
   
   def handle_cast({:processTimeline, timeline, user}, requests) do
-    if Enum.count(timeline) >= Application.get_env(:twitterBot, :extractHashtagsIfTweetsCountMoreThen) do
-      hashtags = TwitterBot.Tweets.extractHashtags(timeline)
-      top_hashtags = TwitterBot.Utils.frequencies_without_counts(hashtags, 5)
-      top_string = Enum.join(top_hashtags, " ")
-      GenServer.cast(:DatabaseServer, {:insertHashtags, user, top_string})
-      if Enum.count(top_hashtags) > Application.get_env(:twitterBot, :showHashtagsIfMoreThen) do
-        msg = "Top hashtags for @#{user}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
-        Logger.info msg
-        try do
-          ExTwitter.update(msg)
-        catch
-          _error -> 
-            ExTwitter.new_direct_message(user, msg)
-        end
-      else
-        Logger.info "Too few hashtags for User #{user}: skipping hashtags"
+    GenServer.cast(:DatabaseServer, {:addUser, user.id, user})
+    hashtags = TwitterBot.Tweets.extractHashtags(timeline)
+    mentions = TwitterBot.Tweets.extractMentions(timeline)
+    urls = TwitterBot.Tweets.extractUrls(timeline)
+    top_hashtags = TwitterBot.Utils.frequencies_without_counts(hashtags, 5)
+    top_mentions = TwitterBot.Utils.frequencies_without_counts(mentions, 200)
+    top_urls = TwitterBot.Utils.frequencies_without_counts(urls, 200)
+    GenServer.cast(:DatabaseServer, {:addUserHashtags, user.id, top_hashtags})
+    GenServer.cast(:DatabaseServer, {:addUserMentions, user.id, top_mentions})
+    GenServer.cast(:DatabaseServer, {:addUserUrls, user.id, top_urls})
+  
+    top_string = Enum.join(top_hashtags, " ")
+    if Enum.count(top_hashtags) > Application.get_env(:twitterBot, :showHashtagsIfMoreThen) and Application.get_env(:twitterBot, :updateStatus) do
+      msg = "Top hashtags for @#{user.screen_name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+      Logger.info msg
+      try do
+        ExTwitter.update(msg)
+      catch
+        _error -> 
+          ExTwitter.new_direct_message(user, msg)
       end
     else
-        Logger.info "Too few records for User #{user}: skipping hashtags"
+      Logger.info "Too few hashtags for User @#{user.screen_name} #{user.id}: skipping hashtags"
     end
+
     {:noreply, requests + 1}
   end
   

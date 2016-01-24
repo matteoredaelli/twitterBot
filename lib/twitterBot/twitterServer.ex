@@ -43,12 +43,8 @@ defmodule TwitterBot.TwitterServer do
 
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def processUser(server, name) do
-    GenServer.cast(server, {:getTimeline, name})
-  end
-
-  def showHashtags(server, name) do
-    GenServer.call(server, {:showHashtags, name})
+  def processUser(server, user) do
+    GenServer.cast(server, {:processUser, user})
   end
   
   def updateStatus(server, text) do
@@ -65,15 +61,17 @@ defmodule TwitterBot.TwitterServer do
     {:stop, :normal, :ok, state}
   end
   
-  def handle_cast({:processUser, name}, requests) do
-    hashtag_record = GenServer.call(:DatabaseServer, {:getHashtags, name})
-    if is_nil(hashtag_record) do
-      Logger.info "User #{name} NOT in the database: getting timeline"
-      timeline = ExTwitter.user_timeline(screen_name: name, count: 500)
-      GenServer.cast(:Analyzer, {:processTimeline, timeline, name})
+  def handle_cast({:processUser, user}, requests) do
+    ## sample id=2243653404
+    ## timeline = ExTwitter.user_timeline(screen_name: "ebot70")
+    ## user=List.first(timeline).user
+    if is_nil(GenServer.call(:DatabaseServer, {:getUser, user.id})) do
+      Logger.info "User #{user.id} NOT in the database: getting timeline"
+      timeline = ExTwitter.user_timeline(id: user.id, count: 500)
+      GenServer.cast(:Analyzer, {:processTimeline, timeline, user})
       :timer.sleep(4000)
     else
-      Logger.info "User #{name} already in the database"
+      Logger.info "User #{user.id} already in the database"
     end
     {:noreply, requests + 1}
   end

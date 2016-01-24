@@ -15,7 +15,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 defmodule TwitterBot.Tweet do
-  
   @doc """
   Extract hashtags
   """
@@ -27,7 +26,7 @@ defmodule TwitterBot.Tweet do
   Extract User mentions
   """
   def extractUserMentions(tweet) do
-    Enum.map(tweet.entities.user_mentions, fn(x) -> x.screen_name end)
+    Enum.map(tweet.entities.user_mentions, fn(x) -> x.id end)
   end
 
   @spec extractUrls(ExTwitter.Model.Tweet.t) :: [ String.t ]
@@ -36,5 +35,6 @@ defmodule TwitterBot.Tweet do
     |> Map.get(:entities)
     |> Map.get(:urls)
     |> Enum.map(&Map.get(&1, :expanded_url))
-  end                  
+  end
+
 end

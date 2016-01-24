@@ -37,6 +37,5 @@ config :extwitter, :oauth, [
 
 config :twitterBot,
 wordsToStream: "bigdata,iot",
-showHashtagsIfMoreThen: 3,
-extractHashtagsIfTweetsCountMoreThen: 75
-
+updateStatus: true,
+showHashtagsIfMoreThen: 3

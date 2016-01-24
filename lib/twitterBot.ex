@@ -21,10 +21,14 @@ defmodule TwitterBot do
   # for more information on OTP Applications
   def start(_type, [words_string]) do
     import Supervisor.Spec, warn: false
+    
     words = String.split(words_string, ",")
-    tasks_children = Enum.map(words,
-      fn(w) -> worker(Task, [fn -> TwitterBot.TwitterStream.stream(w) end],
-[restart: :permanent, id: w]) end)
+    if words_string != "" and Enum.count(words) >= 1 do
+      tasks_children = Enum.map(words,
+        fn(w) -> worker(Task, [fn -> TwitterBot.TwitterStream.stream(w) end], [restart: :permanent, id: w]) end)
+    else
+      tasks_children = []
+    end
     children = [
       # Define workers and child supervisors to be supervised
       worker(TwitterBot.Analyzer, [:ok, [name: :Analyzer]], restart: :permanent),
