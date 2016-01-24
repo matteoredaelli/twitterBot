@@ -23,11 +23,11 @@ defmodule TwitterBot do
     import Supervisor.Spec, warn: false
     
     words = String.split(words_string, ",")
-    if words_string != "" and Enum.count(words) >= 1 do
-      tasks_children = Enum.map(words,
+    tasks_children = if words_string != "" and Enum.count(words) >= 1 do
+      Enum.map(words,
         fn(w) -> worker(Task, [fn -> TwitterBot.TwitterStream.stream(w) end], [restart: :permanent, id: w]) end)
     else
-      tasks_children = []
+      []
     end
     children = [
       # Define workers and child supervisors to be supervised
