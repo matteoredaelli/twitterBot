@@ -55,8 +55,10 @@ defmodule TwitterBot.GraphExportServer do
   end
   
   def handle_cast({:exportCSV, edges}, requests) do
-    Logger.info "Saving edges to file"
-    TwitterBot.Graph.exportCSV(edges, "edges.csv")
+    {{y,m,d}, _}=:os.timestamp |> :calendar.now_to_datetime
+    dir = "graph/#{y}/#{m}"
+    File.mkdir_p(dir)
+    TwitterBot.Graph.exportCSV(edges, "#{dir}/#{d}.csv")
     {:noreply, requests + 1}
   end
   
