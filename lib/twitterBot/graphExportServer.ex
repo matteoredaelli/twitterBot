@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-defmodule TwitterBot.Analyzer do
+defmodule TwitterBot.GraphExportServer do
   use GenServer
   require Logger
   
@@ -33,14 +33,15 @@ defmodule TwitterBot.Analyzer do
   def stop(server) do
     GenServer.call(server, :stop)
   end
+  
     
   @doc """
   Looks up the bucket pid for `name` stored in `server`.
 
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def processTweets(server, tweets) do
-    GenServer.cast(server, {:processTweets, tweets})
+  def exportCSV(server, edges) do
+    GenServer.cast(server, {:exportCSV, edges})
   end
   
   ## Server Callbacks
@@ -53,11 +54,10 @@ defmodule TwitterBot.Analyzer do
     {:stop, :normal, :ok, state}
   end
   
-  def handle_cast({:processTweets, tweets}, requests) do
-    tweets |>
-      Enum.map(fn(t) -> TwitterBot.Tweet.extractGraphInfo(t) end) |>
-      Enum.map(fn(edges) -> GenServer.cast(:GraphExportServer, {:exportCSV, edges}) end) 
+  def handle_cast({:exportCSV, edges}, requests) do
+    Logger.info "Saving edges to file"
+    TwitterBot.Graph.exportCSV(edges, "edges.csv")
     {:noreply, requests + 1}
   end
-
+  
 end

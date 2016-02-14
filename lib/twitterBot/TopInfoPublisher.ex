@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-defmodule TwitterBot.Analyzer do
+defmodule TwitterBot.TopInfoPublisher do
   use GenServer
   require Logger
   
@@ -39,8 +39,8 @@ defmodule TwitterBot.Analyzer do
 
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def processTweets(server, tweets) do
-    GenServer.cast(server, {:processTweets, tweets})
+  def processTimeline(server, timeline, user) do
+    GenServer.cast(server, {:processTimeline, timeline, user})
   end
   
   ## Server Callbacks
@@ -53,11 +53,30 @@ defmodule TwitterBot.Analyzer do
     {:stop, :normal, :ok, state}
   end
   
-  def handle_cast({:processTweets, tweets}, requests) do
-    tweets |>
-      Enum.map(fn(t) -> TwitterBot.Tweet.extractGraphInfo(t) end) |>
-      Enum.map(fn(edges) -> GenServer.cast(:GraphExportServer, {:exportCSV, edges}) end) 
+  def handle_cast({:processTimeline, timeline, user}, requests) do
+    GenServer.cast(:DatabaseServer, {:addUser, user.id, user})
+    hashtags = TwitterBot.Tweets.extractHashtags(timeline)
+    top_hashtags = TwitterBot.Utils.frequencies_without_counts(hashtags, 5)
+    top_string = Enum.join(top_hashtags, " ")
+    msg = "Top hashtags for @#{user.screen_name}: #{top_string} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+    Logger.info msg
+    if Enum.count(top_hashtags) > Application.get_env(:twitterBot, :showHashtagsIfMoreThen) and Application.get_env(:twitterBot, :updateStatus) do
+      try do
+        ExTwitter.update(msg)
+      catch
+        _error -> 
+          ExTwitter.new_direct_message(user, msg)
+      end
+    else
+      Logger.info ":updateStatus=false OR Too few hashtags for User @#{user.screen_name} #{user.id}: skipping hashtags"
+    end
+
     {:noreply, requests + 1}
   end
-
+  
+  def handle_cast({:updateStatus, text}, requests) do
+    IO.puts text
+    {:noreply, requests}
+  end
+  
 end

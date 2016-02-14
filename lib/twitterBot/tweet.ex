@@ -37,4 +37,22 @@ defmodule TwitterBot.Tweet do
     |> Enum.map(&Map.get(&1, :expanded_url))
   end
 
+  def extractGraphInfo(tweet) do
+    id = tweet.id
+    user=tweet.user.id
+
+    hashtags = extractHashtags(tweet)
+    edges_hashtags = hashtags |>
+      Enum.map(fn(x) -> ["tweet::#{id}", "contains", "hashtag::#{x}"] end)
+
+    mentions = extractUserMentions(tweet)
+    edges_mentions = mentions |>
+      Enum.map(fn(x) -> ["tweet::#{id}", "mentions", "twuser::#{x}"] end)
+
+    urls = extractUrls(tweet)
+    edges_urls = urls |>
+      Enum.map(fn(x) -> ["tweet::#{id}", "contains", "url::#{x}"] end)
+    [["twuser::#{user}", "wrote", "tweet::#{id}"]] ++
+      edges_hashtags ++ edges_mentions ++ edges_urls
+  end
 end

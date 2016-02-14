@@ -14,13 +14,18 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use Amnesia
-
-# defines a database called Database, it's basically a defmodule with
-# some additional magic
-defdatabase Database do
-    
-  deftable User, [:id, :user], type: :ordered_set do  
-  end
+defmodule TwitterBot.Graph do
   
+  @doc """
+  Extract hashtags
+  """
+  def exportCSV(edges, filename) do
+    {:ok, file} = File.open filename, [:append]
+
+    edges |>
+      Enum.map(fn([subject, predicate, object]) -> IO.binwrite file, "\"#{subject}\",\"#{predicate}\",\"#{object}\"\n" end) 
+      
+    File.close file
+  end
+               
 end

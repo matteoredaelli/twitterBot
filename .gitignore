@@ -6,3 +6,4 @@ Mnesia*
 *~
 *.lock
 config/config.exs
+*.csv

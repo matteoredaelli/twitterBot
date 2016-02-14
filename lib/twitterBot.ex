@@ -32,7 +32,9 @@ defmodule TwitterBot do
     children = [
       # Define workers and child supervisors to be supervised
       worker(TwitterBot.Analyzer, [:ok, [name: :Analyzer]], restart: :permanent),
+      worker(TwitterBot.TopInfoPublisher, [:ok, [name: :TopInfoPublisher]], restart: :permanent),
       worker(TwitterBot.TwitterServer, [:ok, [name: :TwitterServer]], restart: :permanent),
+      worker(TwitterBot.GraphExportServer, [:ok, [name: :GraphExportServer]], restart: :permanent),
       worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]], restart: :permanent)
     ] ++ tasks_children
 

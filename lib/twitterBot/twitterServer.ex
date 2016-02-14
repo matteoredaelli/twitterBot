@@ -70,7 +70,8 @@ defmodule TwitterBot.TwitterServer do
     if is_nil(GenServer.call(:DatabaseServer, {:getUser, user.id})) do
       Logger.info "  User #{user.screen_name} (#{user.id}) NOT in the database: getting timeline"
       timeline = ExTwitter.user_timeline(id: user.id, count: 500)
-      GenServer.cast(:Analyzer, {:processTimeline, timeline, user})
+      GenServer.cast(:TopInfoPublisher, {:processTimeline, timeline, user})
+      GenServer.cast(:Analyzer, {:processTweets, timeline})
       :timer.sleep(4000)
       if is_nil(GenServer.call(:DatabaseServer, {:getUser, user.id})) do
         Logger.debug "  User #{user.screen_name} (#{user.id}) should be already in the database"
