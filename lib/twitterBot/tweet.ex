@@ -52,7 +52,14 @@ defmodule TwitterBot.Tweet do
     urls = extractUrls(tweet)
     edges_urls = urls |>
       Enum.map(fn(x) -> ["tweet::#{id}", "contains", "url::#{x}"] end)
-    [["twuser::#{user}", "wrote", "tweet::#{id}"]] ++
+
+    result = [["twuser::#{user}", "wrote", "tweet::#{id}"]]
+    
+    if not is_nil(tweet.in_reply_to_user_id_str) do
+      result = result ++
+        [["twuser::#{user}", "reply_to", "tweet::#{tweet.in_reply_to_user_id_str}"]]
+    end
+    result ++
       edges_hashtags ++ edges_mentions ++ edges_urls
   end
 end
