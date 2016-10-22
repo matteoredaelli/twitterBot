@@ -18,6 +18,7 @@ defmodule TwitterBot.DatabaseServer do
   use GenServer
   use Database
   require Logger
+  require  Amnesia.Helper
   
  ## Client API
   

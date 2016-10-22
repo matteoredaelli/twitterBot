@@ -20,7 +20,7 @@ defmodule TwitterBot.Mixfile do
   def project do
     [app: :twitterBot,
      version: "0.5.0",
-     elixir: "~> 1.1",
+     elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      escript: [main_module: TwitterBot],
@@ -47,7 +47,7 @@ defmodule TwitterBot.Mixfile do
   defp deps do
     [
       {:oauth, github: "tim/erlang-oauth"},
-      {:extwitter, "~> 0.6"},
+      {:extwitter, "~> 0.7"},
       ##{:poison, "~> 1.5"},
       {:amnesia, github: "meh/amnesia"}
     ]
