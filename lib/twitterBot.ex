@@ -22,8 +22,8 @@ defmodule TwitterBot do
   def start(_type, [words_string]) do
     import Supervisor.Spec, warn: false
     
-    words = String.split(words_string, ",")
-    tasks_children = if words_string != "" and Enum.count(words) >= 1 do
+    tasks_children = if words_string != "" and not is_nil(words_string) do
+      words = String.split(words_string, ",")
       Enum.map(words,
         fn(w) -> worker(Task, [fn -> TwitterBot.TwitterStream.stream(w) end], [restart: :permanent, id: w]) end)
     else
