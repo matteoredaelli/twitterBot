@@ -35,7 +35,8 @@ defmodule TwitterBot do
       worker(TwitterBot.TopInfoPublisher, [:ok, [name: :TopInfoPublisher]], restart: :permanent),
       worker(TwitterBot.TwitterServer, [:ok, [name: :TwitterServer]], restart: :permanent),
       worker(TwitterBot.GraphExportServer, [:ok, [name: :GraphExportServer]], restart: :permanent),
-      worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]], restart: :permanent)
+      worker(TwitterBot.DatabaseServer, [:ok, [name: :DatabaseServer]], restart: :permanent),
+      worker(TwitterBot.ElasticServer, [:ok, [name: :ElasticServer]], restart: :permanent)
     ] ++ tasks_children
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

@@ -43,10 +43,14 @@ defmodule TwitterBot.TwitterServer do
 
   Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
   """
-  def processUser(server, user) do
+  def processTweet(server, user) do
     GenServer.cast(server, {:processUser, user})
   end
   
+  def processUser(server, user) do
+    GenServer.cast(server, {:processUser, user})
+  end
+    
   def updateStatus(server, text) do
     GenServer.cast(server, {:updateStatus, text})
   end
@@ -59,6 +63,16 @@ defmodule TwitterBot.TwitterServer do
 
   def handle_call(:stop, _from, state) do
     {:stop, :normal, :ok, state}
+  end
+
+  def handle_cast({:processTweet, tweet}, requests) do
+    ## sample id=2243653404
+    ## timeline = ExTwitter.user_timeline(screen_name: "ebot70")
+    ## user=List.first(timeline).user
+    Logger.info "Processing tweet #{tweet.text} from user #{tweet.user.screen_name} (#{tweet.user.id}) ..."
+    GenServer.cast(:ElasticServer, {:addTweet, tweet.id, tweet})
+    GenServer.cast(:ElasticServer, {:addUser, tweet.user.id, tweet.user})
+    {:noreply, requests + 1}
   end
   
   def handle_cast({:processUser, user}, requests) do

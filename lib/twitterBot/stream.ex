@@ -27,7 +27,8 @@ defmodule TwitterBot.TwitterStream do
 
     stream = ExTwitter.stream_filter(track: word)
     stream
-    |> Stream.map(fn(x) -> GenServer.cast(:TwitterServer, {:processUser, x.user}) end)
+    #|> Stream.map(fn(x) -> GenServer.cast(:TwitterServer, {:processUser, x.user}) end)
+    |> Stream.map(fn(x) -> GenServer.cast(:TwitterServer, {:processTweet, x}) end)
     |> Enum.to_list
   end
 end
