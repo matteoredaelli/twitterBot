@@ -20,7 +20,7 @@ defmodule TwitterBot.TwitterStream do
   def stream(word) do
     # a tweet about starting ebottwitter
     timestamp = :os.system_time(:seconds)
-    msg = "@ebot70: starting #twitterBot for word ##{word} at #{timestamp} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
+     msg = "@ebot70: starting #twitterBot for word ##{word} at #{timestamp} http://www.redaelli.org/matteo-blog/projects/ebottwitter/"
     Logger.info msg
     
     #ExTwitter.update(msg)

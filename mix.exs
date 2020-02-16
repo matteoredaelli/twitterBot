@@ -19,8 +19,8 @@ defmodule TwitterBot.Mixfile do
 
   def project do
     [app: :twitterBot,
-     version: "0.5.1",
-     elixir: "~> 1.0",
+     version: "0.6.0",
+     elixir: "~> 1.9",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      escript: [main_module: TwitterBot],
@@ -31,7 +31,7 @@ defmodule TwitterBot.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :tirexs],
+    [applications: [:logger, :tirexs, :extwitter],
      mod: {TwitterBot, [Application.get_env(:twitterBot, :wordsToStream)]}]
   end
 
@@ -46,10 +46,11 @@ defmodule TwitterBot.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:oauth, github: "tim/erlang-oauth"},
-      {:extwitter, "~> 0.12"},
+      {:oauther, "~> 1.1"},
+      {:extwitter, "~> 0.8"},
       {:tirexs, "~> 0.8"},
       ##{:poison, "~> 1.5"},
+      {:exquisite,[git: "https://github.com/noizu/exquisite.git",override: true] },
       {:amnesia, github: "meh/amnesia"}
     ]
   end

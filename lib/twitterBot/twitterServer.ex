@@ -70,8 +70,8 @@ defmodule TwitterBot.TwitterServer do
     ## timeline = ExTwitter.user_timeline(screen_name: "ebot70")
     ## user=List.first(timeline).user
     Logger.info "Processing tweet #{tweet.text} from user #{tweet.user.screen_name} (#{tweet.user.id}) ..."
-    GenServer.cast(:ElasticServer, {:addTweet, tweet.id, tweet})
-    GenServer.cast(:ElasticServer, {:addUser, tweet.user.id, tweet.user})
+    #GenServer.cast(:ElasticServer, {:addTweet, tweet.id, tweet})
+    #GenServer.cast(:ElasticServer, {:addUser, tweet.user.id, tweet.user})
     {:noreply, requests + 1}
   end
   
