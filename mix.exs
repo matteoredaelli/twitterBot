@@ -24,7 +24,7 @@ defmodule TwitterBot.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      escript: [main_module: TwitterBot],
-     deps: deps]
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -34,7 +34,7 @@ defmodule TwitterBot.Mixfile do
     [applications: [:logger, :tirexs],
      mod: {TwitterBot, [Application.get_env(:twitterBot, :wordsToStream)]}]
   end
- 
+
   # Dependencies can be Hex packages:
   #
   #   {:mydep, "~> 0.3.0"}
@@ -47,7 +47,7 @@ defmodule TwitterBot.Mixfile do
   defp deps do
     [
       {:oauth, github: "tim/erlang-oauth"},
-      {:extwitter, "~> 0.7"},
+      {:extwitter, "~> 0.12"},
       {:tirexs, "~> 0.8"},
       ##{:poison, "~> 1.5"},
       {:amnesia, github: "meh/amnesia"}
